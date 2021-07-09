@@ -1,0 +1,84 @@
+version: "3"
+
+services:
+
+    mysql:
+        image: mysql:8.0.16
+        container_name: mysql
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: hoj_db
+            MYSQL_USER: root
+            MYSQL_PASSWORD: root
+            TZ: Asia/Shanghai
+        volumes:
+            - ./data/mysql:/var/lib/mysql
+            - ./data/config:/etc/mysql/conf.d
+        expose:
+            - 3306
+        command:
+            --default-authentication-plugin=mysql_native_password
+            --character-set-server=utf8mb4
+            --collation-server=utf8mb4_general_ci
+            --explicit_defaults_for_timestamp=true
+            --lower_case_table_names=1
+            --max_allowed_packet=128M
+
+    redis:
+        image: redis:6.0.6
+        container_name: redis
+        restart: always
+        volumes:
+            - ./data/redis/conf:/usr/local/etc/redis/
+            - ./data/redis/data:/data:rw
+        expose:
+            - 6379
+        command:
+            redis-server
+
+    judger:
+        image: registry.cn-hangzhou.aliyuncs.com/aliyun_hzcool/judger:3.0.0
+        container_name: judger
+        restart: always
+        environment:
+            - BASE_PATH=/src
+            - SERVICE_PORT=:8001
+            - ACCESS_TOKEN=123
+
+        privileged: true
+        volumes:
+            - ./data/judger/test_case:/src/test_case
+            - ./data/judger/log:/src/log
+            - ./data/judger/tmp:/src/tmp
+        expose:
+            - 8001
+
+
+    happy-online-judge:
+        build:
+            context: ../
+            dockerfile: HappyOnlineJudge/Dockerfile
+        container_name: hoj
+        image: hoj:1.0.0
+        restart: always
+        privileged: true
+        volumes:
+            - ./data/judger/test_case:/src/test_case
+            - ./data/backend/statics:/src/statics
+        links:
+            - mysql
+            - redis
+            - judger
+        depends_on:
+            - mysql
+            - redis
+            - judger
+        command:
+            - /bin/bash
+            - -c
+            - |
+                cd /src
+                ./main
+        ports:
+            -  9999:9999
