@@ -3,7 +3,7 @@
 ### 运行环境
 - 下载安装docker和docker-compose即可快速部署
 ### 构建方法
-- 下载项目```git clone https://github.com/hzcool/HaHaOJ.git```
+- 下载项目```git clone git@github.com:hzcool/HappyOnlineJudge.git```
 - 进入下载项目```cd HappyOnlineJudge```，执行 ```docker-compose up -d```  ，即可启动成功
 - 在浏览器输入 http://127.0.0.1:9999 即可访问
 
