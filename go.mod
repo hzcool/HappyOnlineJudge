@@ -13,7 +13,7 @@ require (
 	github.com/go-xorm/xorm v0.7.9
 	github.com/lib/pq v1.1.1 // indirect
 	github.com/mattn/go-sqlite3 v2.0.1+incompatible // indirect
-	golang.org/x/crypto v0.0.0-20191205180655-e7c4368fe9dd // indirect
+	golang.org/x/crypto v0.1.0 // indirect
 	gopkg.in/go-playground/validator.v9 v9.29.1
 	xorm.io/core v0.7.2-0.20190928055935-90aeac8d08eb
 )
